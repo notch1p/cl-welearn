@@ -1,4 +1,4 @@
-under contstruction.
+under contstruction. **1/2: automatic course finishing is done**
 
 # Cl-Welearn - Sample library
 

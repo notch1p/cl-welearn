@@ -15,7 +15,9 @@
                         "com.inuoe.jzon"
                         "cl-ppcre"
                         "quri"
-                        "cl-ansi-text")
+                        "alexandria"
+                        "cl-ansi-text"
+                        "cl-interpol")
            :serial t
            :components ((:module "src"
                                  :serial t
@@ -49,6 +51,7 @@
                         "com.inuoe.jzon"
                         "cl-ppcre"
                         "quri"
+                        "alexandria"
                         "cl-ansi-text"
                         "cl-interpol")
            :serial t

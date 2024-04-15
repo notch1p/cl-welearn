@@ -29,8 +29,14 @@
         *global-cookies*))
 
 (defun prompt-passwd (&optional user passwd)
-    (format t "Enter username and password line by line:~%")
-    (force-output)
+    (format t "HINT: You can always use <C-d> to invoke the debugger.~%")
+    (when user (format t "INFO: WELEARN_ACCOUNT set to ~a~%" user))
+    (when passwd (format t "INFO: WELEARN_PASSWD set to ~a~%" passwd))
     (cookies<-cred
-     (if user user (read-line))
-     (if passwd passwd (read-line))))
+     (or user (input "Enter username: "))
+     (or passwd (input "Enter password: "))))
+
+(defun input (hint &optional directives)
+    (format t hint directives)
+    (force-output)
+    (read-line))
