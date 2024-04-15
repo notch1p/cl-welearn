@@ -17,7 +17,10 @@
                         "quri"
                         "alexandria"
                         "cl-ansi-text"
-                        "cl-interpol")
+                        "cl-interpol"
+                        "cl-ansi-term"
+                        "cl-progress-bar"
+                        "cl-tqdm")
            :serial t
            :components ((:module "src"
                                  :serial t
@@ -53,7 +56,10 @@
                         "quri"
                         "alexandria"
                         "cl-ansi-text"
-                        "cl-interpol")
+                        "cl-interpol"
+                        "cl-ansi-term"
+                        "cl-progress-bar"
+                        "cl-tqdm")
            :serial t
            :components ((:module "src"
                                  :serial t
