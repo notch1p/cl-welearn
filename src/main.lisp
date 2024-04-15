@@ -4,23 +4,17 @@
                   #:cookies<-cred
                   #:prompt-passwd)
     (:import-from :cl-welearn.learn
-                  #:print-query-results
-                  #:query-courses
-                  #:with-hint-input
-                  #:query-units)
+                  #:learn)
     (:import-from :cl-welearn.pprint
                   #:format-table)
+    (:import-from :uiop
+                  #:getenv)
     (:export :main))
 (in-package :cl-welearn)
 
-(defun main ()
+(defparameter welearn-account (getenv "WELEARN_ACCOUNT"))
+(defparameter welearn-password (getenv "WELEARN_PASSWORD"))
 
-    ; get courses
-    (prompt-passwd)
-    (print-query-results (query-courses))
-    (with-hint-input "Choose one or more unit by its index (or <C-d> to exit):~%e.g. '(1 3 5)' for unit 1,3,5. Uses lisp syntax. " t
-        (format-table t (query-units)
-                      :header nil
-                      ;   :column-label '("Index" "Visibility" "#Unit" "Unit Name")
-                      ;   :column-align '(:right :center :left :right)
-                      )))
+(defun main ()
+    (prompt-passwd welearn-account welearn-password)
+    (learn))
