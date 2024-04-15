@@ -4,13 +4,19 @@
     (:import-from :cl-welearn.auth
                   #:*global-cookies*
                   #:cookies<-cred)
-    (:import-from :str #:containsp #:repeat #:replace-first)
+    (:import-from :str #:containsp #:replace-first)
     (:import-from :com.inuoe.jzon #:parse)
     (:import-from :cl-welearn.pprint #:format-table)
     (:import-from :cl-ppcre #:scan-to-strings)
     (:import-from :quri #:make-uri)
     (:import-from :cl-ansi-text #:green #:red #:yellow)
     (:import-from :alexandria #:read-file-into-string)
+    (:import-from :cl-tqdm
+                  #:with-tqdm
+                  #:update
+                  #:with-config
+                  #:config)
+    (:import-from :term #:hr)
     (:export :with-hint-input
              :print-query-results
              :query-courses
@@ -22,7 +28,7 @@
 (defparameter *result* nil)
 
 (defun print-line ()
-    (format t "~A~%" (repeat 51 "=")))
+    (term:hr :filler "="))
 
 (defun query-courses ()
     (let* ((res (dex:get *query-uri*
@@ -50,7 +56,7 @@
 
 (defmacro with-hint-input (hint divider? &body body)
     `(progn
-      (when ,divider? (format t "===================================================~%"))
+      (when ,divider? (print-line))
       (format t ,hint)
       (force-output)
       ,@body))
@@ -131,71 +137,82 @@
                                (let* ((res (dex:get uri
                                                :headers infoheaders
                                                :cookie-jar *global-cookies*))
-                                      (json (parse res)))
+                                      (json (parse res))
+                                      (json-info (gethash "info" json))
+                                      (json-info-length (length json-info)))
                                    (when (or
                                           (containsp "异常" res)
                                           (containsp "出错了" res))
                                          (return))
-                                   (loop for cnt from 0 for len from (length (gethash "info" json)) for course across (gethash "info" json) do
-                                             (if (string= (gethash "isvisible" course) "false")
-                                                 (progn (format t "[!!Skipped!!]    ~A" (gethash "location" course))
-                                                        (incf cnt-all) (incf cnt-skipped))
-                                                 (progn
-                                                  (incf cnt-all)
-                                                  (when
-                                                   (containsp "未" (gethash "iscomplete" course))
-                                                   (if rand?
-                                                       (setf crate (random-between
-                                                                    (first correctness)
-                                                                    (second correctness)))
-                                                       (setf crate correctness))
-                                                   (let ((data #?"{\"cmi\":{\"completion_status\":\"completed\",\"interactions\":[],\"launch_data\":\"\",\"progress_measure\":\"1\",\"score\":{\"scaled\":\"${crate}\",\"raw\":\"100\"},\"session_time\":\"0\",\"success_status\":\"unknown\",\"total_time\":\"0\",\"mode\":\"normal\"},\"adl\":{\"data\":[]},\"cci\":{\"data\":[],\"service\":{\"dictionary\":{\"headword\":\"\",\"short_cuts\":\"\"},\"new_words\":[],\"notes\":[],\"writing_marking\":[],\"record\":{\"files\":[]},\"play\":{\"offline_media_id\":\"9999\"}},\"retry_count\":\"0\",\"submit_time\":\"\"}}[INTERACTIONINFO]")
-                                                         (id (gethash "id" course)))
-                                                       (dex:post ajaxurl
-                                                           :content `(("action" . "startsco160928")
-                                                                      ("cid" . ,cid)
-                                                                      ("scoid" . ,id)
-                                                                      ("uid" . ,uid))
-                                                           :headers `(("Referer" . ,#?"https://welearn.sflep.com/Student/StudyCourse.aspx?cid=${cid}&classid=${classid}&sco=${id}"))
-                                                           :cookie-jar *global-cookies*)
-                                                       (setq res
-                                                               (dex:post ajaxurl
-                                                                   :content `(("action" . "setscoinfo")
-                                                                              ("cid" . ,cid)
-                                                                              ("scoid" . ,id)
-                                                                              ("uid" . ,uid)
-                                                                              ("data" . ,data)
-                                                                              ("isend" . "False"))
-                                                                   :headers `(("Referer" . ,#?"https://welearn.sflep.com/Student/StudyCourse.aspx?cid=${cid}&classid=${classid}&sco=${id}"))
-                                                                   :cookie-jar *global-cookies*))
-                                                       (format t ">>>>Correctness: ~A%<<<<~%" crate)
-                                                       (if (containsp "\"ret\":0" res)
-                                                           (format t "~A    Method#1~%" (green ">>>>Succeeded<<<<"))
-                                                           (progn (format t "~A    Method#1~%" (red ">>>>Failed<<<<"))
-                                                                  (push course way1-failed)))
-                                                       (setq res
-                                                               (dex:post ajaxurl
-                                                                   :content `(("action" . "savescoinfo160928")
-                                                                              ("cid" . ,cid)
-                                                                              ("scoid" . ,id)
-                                                                              ("uid" . ,uid)
-                                                                              ("progress" . "100")
-                                                                              ("crate" . ,crate)
-                                                                              ("status" . "unknown")
-                                                                              ("cstatus" . "completed")
-                                                                              ("trycount" . "0"))
-                                                                   :headers `(("Referer" . ,#?"https://welearn.sflep.com/Student/StudyCourse.aspx?cid=${cid}&classid=${classid}&sco=${id}"))
-                                                                   :cookie-jar *global-cookies*))
-                                                       (if (containsp "\"ret\":0" res)
-                                                           (format t "~A    Method#2~%" (green ">>>>Succeeded<<<<"))
-                                                           (progn (format t "~A    Method#2~%" (red ">>>>Failed<<<<"))
-                                                                  (push course way2-failed)))))
-                                                  (format t "~A    ~A~%" (yellow "[!!Finished!!]") (gethash "location" course)))))
+                                   (with-config (config :indent 4)
+                                                (with-tqdm pb json-info-length "unit"
+                                                           (loop for course across json-info do
+                                                                     (update pb
+                                                                             :incf 1
+                                                                             :description (str:concat
+                                                                                              (str:collapse-whitespaces
+                                                                                                  (first
+                                                                                                      (str:split #\>
+                                                                                                                 (gethash "location" course))))
+                                                                                              #?"Correctness${crate}%")
+                                                                             :stream t)
+                                                                     (force-output)
+                                                                     (if (string= (gethash "isvisible" course) "false")
+                                                                         (progn (format t "[!!Skipped!!]    ~A" (gethash "location" course))
+                                                                                (incf cnt-all) (incf cnt-skipped))
+                                                                         (progn
+                                                                          (incf cnt-all)
+                                                                          (when
+                                                                           (containsp "未" (gethash "iscomplete" course))
+                                                                           (if rand?
+                                                                               (setf crate (random-between
+                                                                                            (first correctness)
+                                                                                            (second correctness)))
+                                                                               (setf crate correctness))
+                                                                           (let ((data #?"{\"cmi\":{\"completion_status\":\"completed\",\"interactions\":[],\"launch_data\":\"\",\"progress_measure\":\"1\",\"score\":{\"scaled\":\"${crate}\",\"raw\":\"100\"},\"session_time\":\"0\",\"success_status\":\"unknown\",\"total_time\":\"0\",\"mode\":\"normal\"},\"adl\":{\"data\":[]},\"cci\":{\"data\":[],\"service\":{\"dictionary\":{\"headword\":\"\",\"short_cuts\":\"\"},\"new_words\":[],\"notes\":[],\"writing_marking\":[],\"record\":{\"files\":[]},\"play\":{\"offline_media_id\":\"9999\"}},\"retry_count\":\"0\",\"submit_time\":\"\"}}[INTERACTIONINFO]")
+                                                                                 (id (gethash "id" course)))
+                                                                               (dex:post ajaxurl
+                                                                                   :content `(("action" . "startsco160928")
+                                                                                              ("cid" . ,cid)
+                                                                                              ("scoid" . ,id)
+                                                                                              ("uid" . ,uid))
+                                                                                   :headers `(("Referer" . ,#?"https://welearn.sflep.com/Student/StudyCourse.aspx?cid=${cid}&classid=${classid}&sco=${id}"))
+                                                                                   :cookie-jar *global-cookies*)
+                                                                               (setq res
+                                                                                       (dex:post ajaxurl
+                                                                                           :content `(("action" . "setscoinfo")
+                                                                                                      ("cid" . ,cid)
+                                                                                                      ("scoid" . ,id)
+                                                                                                      ("uid" . ,uid)
+                                                                                                      ("data" . ,data)
+                                                                                                      ("isend" . "False"))
+                                                                                           :headers `(("Referer" . ,#?"https://welearn.sflep.com/Student/StudyCourse.aspx?cid=${cid}&classid=${classid}&sco=${id}"))
+                                                                                           :cookie-jar *global-cookies*))
+                                                                               (unless (containsp "\"ret\":0" res)
+                                                                                   (push course way1-failed))
+                                                                               (setq res
+                                                                                       (dex:post ajaxurl
+                                                                                           :content `(("action" . "savescoinfo160928")
+                                                                                                      ("cid" . ,cid)
+                                                                                                      ("scoid" . ,id)
+                                                                                                      ("uid" . ,uid)
+                                                                                                      ("progress" . "100")
+                                                                                                      ("crate" . ,crate)
+                                                                                                      ("status" . "unknown")
+                                                                                                      ("cstatus" . "completed")
+                                                                                                      ("trycount" . "0"))
+                                                                                           :headers `(("Referer" . ,#?"https://welearn.sflep.com/Student/StudyCourse.aspx?cid=${cid}&classid=${classid}&sco=${id}"))
+                                                                                           :cookie-jar *global-cookies*))
+                                                                               (unless (containsp "\"ret\":0" res)
+                                                                                   (push course way2-failed))))
+                                                                          ;  (format t "~%~A    ~A~%" (yellow "[!!Finished!!]") (gethash "location" course))
+                                                                          (sleep 0.1))))))
+                                   (sleep 1)
                                    (format t "~A" (read-file-into-string "src/art.txt"))
-                                   (format t "~A~%" (repeat 51 "="))
-                                   (format t "Total ~A; Processed ~A and skipped ~A, with failed unit listed below:~%" (yellow (write-to-string cnt-all)) (yellow (write-to-string (- cnt-all cnt-skipped))) (yellow (write-to-string cnt-skipped)))
-                                   (format t "~A~%" (or (intersection way1-failed way2-failed) "Looks like there were none failed. You're good!"))
-                                   (format t "~A~%" (repeat 51 "=")))))))))
+                                   (print-line)
+                                   (format t "Total ~A; Processed ~A and skipped ~A, with failed tasks listed below:~%" (yellow (write-to-string cnt-all)) (yellow (write-to-string (- cnt-all cnt-skipped))) (yellow (write-to-string cnt-skipped)))
+                                   (format t "~A~%" (or (intersection way1-failed way2-failed) "...Looks like there were none failed. You're good!"))
+                                   (print-line))))))))
 
 (defun show-progress (current &optional (total 100) (string-before "") (string-after ""))
     "Displays the current progress as a percentage on the same line."
