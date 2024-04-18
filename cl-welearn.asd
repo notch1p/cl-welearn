@@ -19,7 +19,6 @@
                         "cl-ansi-text"
                         "cl-interpol"
                         "cl-ansi-term"
-                        "cl-progress-bar"
                         "cl-tqdm")
            :serial t
            :components ((:module "src"
@@ -28,13 +27,13 @@
                                  ((:file "pprint")
                                   (:file "auth")
                                   (:file "learn")
+                                  (:file "afk")
                                   (:file "main"))))
 
-           :description "Sample library"
-           :long-description "Common Lisp sample library"
+           :description "it finishes homework for you"
            :defsystem-depends-on (:deploy)
            :build-operation "deploy-op"
-           :build-pathname "finishIt"
+           :build-pathname "finishit"
            :entry-point "cl-welearn:main")
 
 (defsystem "cl-welearn"
@@ -58,7 +57,6 @@
                         "cl-ansi-text"
                         "cl-interpol"
                         "cl-ansi-term"
-                        "cl-progress-bar"
                         "cl-tqdm")
            :serial t
            :components ((:module "src"
@@ -67,12 +65,12 @@
                                  ((:file "pprint")
                                   (:file "auth")
                                   (:file "learn")
+                                  (:file "afk")
                                   (:file "main"))))
 
-           :description "Sample library"
-           :long-description "Common Lisp sample library"
+           :description "it finishes homework for you"
            :build-operation "program-op"
-           :build-pathname "finishIt"
+           :build-pathname "bin/finishit"
            :entry-point "cl-welearn:main")
 
 ; (defsystem "cl-welearn/tests"

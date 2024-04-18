@@ -10,3 +10,5 @@
 .vscode
 finishIt
 bin/
+.VSCodeCounter/
+.qlot/

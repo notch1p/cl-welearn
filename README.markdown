@@ -1,19 +1,6 @@
 under contstruction. **1/2: automatic course finishing is done**
+=> [Original](https://github.com/notch1p/welearn-oneclick)
 
-# Cl-Welearn - Sample library
+# Cl-Welearn
 
 ## Usage
-
-## Installation
-
-## Author
-
-- Evan Gao (evan@brmb.me)
-
-## Copyright
-
-Copyright (c) 2024 Evan Gao (evan@brmb.me)
-
-## License
-
-Licensed under the LLGPL License.
