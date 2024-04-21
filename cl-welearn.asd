@@ -7,7 +7,8 @@
            :license "LLGPL"
            :homepage "https://github.com/notch1p/cl-welearn"
            :source-control "https://github.com/notch1p/cl-welearn.git"
-           :depends-on ("str"
+           :depends-on ("bordeaux-threads"
+                        "str"
                         "dexador"
                         "cl-cookie"
                         "cl-utilities"
@@ -26,8 +27,8 @@
                                  :components
                                  ((:file "pprint")
                                   (:file "auth")
-                                  (:file "learn")
                                   (:file "afk")
+                                  (:file "learn")
                                   (:file "main"))))
 
            :description "it finishes homework for you"
@@ -45,7 +46,8 @@
            :license "LLGPL"
            :homepage "https://github.com/notch1p/cl-welearn"
            :source-control "https://github.com/notch1p/cl-welearn.git"
-           :depends-on ("str"
+           :depends-on ("bordeaux-threads"
+                        "str"
                         "dexador"
                         "cl-cookie"
                         "cl-utilities"
@@ -64,8 +66,8 @@
                                  :components
                                  ((:file "pprint")
                                   (:file "auth")
-                                  (:file "learn")
                                   (:file "afk")
+                                  (:file "learn")
                                   (:file "main"))))
 
            :description "it finishes homework for you"
