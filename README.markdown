@@ -4,10 +4,10 @@
 
 ## Usage
 
-Tested with SBCL in macOS and Linux. In Windows WINHTTP is used so it might be a bit different.
+Tested with SBCL in macOS and Linux, uses Bordeaux-Threads. In Windows WINHTTP is used so it might be a bit different.
 
 Basic usage is similar to the original repo, but cookie login is deprecated.
-It now reads `WELEARN_ACCOUNT` and `WELEARN_PASSWORD`. The envs has a lower priority then cli args.
+It now reads `WELEARN_ACCOUNT` and `WELEARN_PASSWORD`. The env has a lower priority then cli args.
 
 ## Building
 
@@ -16,7 +16,7 @@ It now reads `WELEARN_ACCOUNT` and `WELEARN_PASSWORD`. The envs has a lower prio
 - `make run` to run directly
 - `make build` to build an uncompressed build in `bin/`.
 - `make deploy` to deploy an compressed build in
-- `make qlot-deploy` use package manger fukamachi/qlot to build.
+- `make qlot-deploy` use package manger fukamachi/qlot to build. Only asdf is needed.
 
 > [!NOTE]
-> Qlot install an additional copy of quicklisp and the dependencies used in the project folder.
+> SBCL already comes with asdf and Qlot (works like npm) install an local copy of quicklisp and the dependencies used in the project folder.
