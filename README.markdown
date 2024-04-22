@@ -1,5 +1,8 @@
 => [Original](https://github.com/notch1p/welearn-oneclick)
 
+> [!IMPORTANT]
+> ![fkEnglish](https://flexio.blob.core.windows.net/notch1p/1__XEK5hMqdyjVw0GzQu-KUw.png)
+
 # Cl-Welearn
 
 ## Usage
