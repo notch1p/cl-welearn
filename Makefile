@@ -1,14 +1,18 @@
-LISP := sbcl
-DIR := $(shell pwd)/
+LISP ?= sbcl
 BIN := bin/
 PKG_NAME := cl-welearn
 ASDF := $(PKG_NAME).asd
 CLFLAG := --noinform --non-interactive
 CLFLAG_DEPLOY := $(CLFLAG) --no-sysinit --no-userinit
+STATUS_OUTPUT := nil
 define COMMON_BODY
 --eval '(require :asdf)' \
---eval '(asdf:load-asd "$(DIR)$(ASDF)")' \
+--eval '(require :quicklisp)' \
+--eval '(ql:quickload :deploy)' \
+--eval '(asdf:load-asd (merge-pathnames (uiop:getcwd) "$(ASDF)"))' \
 --eval '(ql:quickload :$(PKG_NAME))' \
+--eval '(push :deploy-console *features*)' \
+--eval '(setf deploy:*status-output* $(STATUS_OUTPUT))' \
 --eval '(asdf:make :$(PKG_NAME))'
 endef
 
@@ -29,10 +33,12 @@ qlot-deploy:
 build:
 	$(LISP) $(CLFLAG) \
 		$(COMMON_BODY)
+
+
 deploy:
 	$(LISP) $(CLFLAG) \
-		$(COMMON_BODY_DEPLOY)
+		$(subst nil,t,$(COMMON_BODY_DEPLOY))
 
 .PHONY: clean
 clean:
-	-rm -rf $(BIN)*
+	-rm -rf $(BIN)

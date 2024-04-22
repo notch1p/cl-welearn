@@ -29,7 +29,7 @@
         *global-cookies*))
 
 (defun prompt-passwd (&optional user passwd)
-    (format t "HINT: You can always use <C-d> to invoke the debugger.~%")
+    (format t "HINT: You can always use <C-d> to exit.~%")
     (when user (format t "INFO: WELEARN_ACCOUNT set to ~a~%" user))
     (when passwd (format t "INFO: WELEARN_PASSWD set to ~a~%" passwd))
     (cookies<-cred
