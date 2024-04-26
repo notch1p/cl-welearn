@@ -1,5 +1,5 @@
 (defpackage :cl-welearn.afk
-    (:use #:cl #:sb-thread)
+    (:use #:cl)
     (:import-from :cl-welearn.auth #:*global-cookies*)
     (:import-from :str #:containsp)
     (:import-from :com.inuoe.jzon
