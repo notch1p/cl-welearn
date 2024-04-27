@@ -7,8 +7,7 @@
 (in-package :cl-welearn.afk)
 (named-readtables:in-readtable :interpol-syntax)
 
-(setq dex:*default-read-timeout* 100)
-(setq dex:*default-connect-timeout* 100)
+
 (defun start-afk (afk-time x uid cid)
     (let* ((scoid (gethash "id" x))
            (url "https://welearn.sflep.com/Ajax/SCO.aspx")

@@ -1,5 +1,7 @@
 (defpackage cl-welearn
     (:use :cl)
+    (:import-from :cl-welearn.auth
+                  #:prompt-passwd)
     (:import-from :cl-welearn.learn
                   #:learn)
     (:import-from :clingon
@@ -8,6 +10,8 @@
                   #:getopt)
     (:export :main))
 (in-package :cl-welearn)
+
+(setq dex:*connection-pool* (dex:make-connection-pool 10))
 
 (defun main ()
     (clingon:run (app/command)))
