@@ -1,5 +1,7 @@
 (defpackage cl-welearn
     (:use :cl)
+    (:import-from :cl-welearn.auth
+                  #:prompt-passwd)
     (:import-from :cl-welearn.learn
                   #:learn)
     (:import-from :clingon
