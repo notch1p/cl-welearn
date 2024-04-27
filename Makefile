@@ -4,15 +4,13 @@ PKG_NAME := cl-welearn
 ASDF := $(PKG_NAME).asd
 CLFLAG := --noinform --non-interactive
 CLFLAG_DEPLOY := $(CLFLAG) --no-sysinit --no-userinit
-STATUS_OUTPUT := nil
 define COMMON_BODY
---eval '(require :asdf)' \
---eval '(require :quicklisp)' \
+--eval '(ql:quickload :cl+ssl)' \
 --eval '(ql:quickload :deploy)' \
+--eval '#+unix (deploy:define-library cl+ssl::libssl :dont-deploy T)' \
+--eval '#+unix (deploy:define-library cl+ssl::libcrypto :dont-deploy T)' \
 --eval '(asdf:load-asd (merge-pathnames (uiop:getcwd) "$(ASDF)"))' \
 --eval '(ql:quickload :$(PKG_NAME))' \
---eval '(push :deploy-console *features*)' \
---eval '(setf deploy:*status-output* $(STATUS_OUTPUT))' \
 --eval '(asdf:make :$(PKG_NAME))'
 endef
 
@@ -25,9 +23,9 @@ run:
 		--eval '($(PKG_NAME):main)' 
 
 qlot-deploy:
-	qlot install
 	$(LISP) $(CLFLAG_DEPLOY) \
 		--load '.qlot/setup.lisp' \
+		--eval '(push :deploy-console *features*)' \
 		$(COMMON_BODY_DEPLOY)
 
 build:
@@ -37,7 +35,7 @@ build:
 
 deploy:
 	$(LISP) $(CLFLAG) \
-		$(subst nil,t,$(COMMON_BODY_DEPLOY))
+		$(COMMON_BODY_DEPLOY)
 
 .PHONY: clean
 clean:

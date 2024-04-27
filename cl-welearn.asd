@@ -6,8 +6,8 @@
            :license "BSD 2-Clause"
            :homepage "https://github.com/notch1p/cl-welearn"
            :source-control "https://github.com/notch1p/cl-welearn.git"
-           :depends-on ("deploy"
-                        "bordeaux-threads"
+           :defsystem-depends-on (:deploy)
+           :depends-on ("bordeaux-threads"
                         "str"
                         "dexador"
                         "cl-cookie"
@@ -31,7 +31,6 @@
                                   (:file "main"))))
 
            :description "it finishes homework for you"
-           :defsystem-depends-on (:deploy)
            :build-operation "deploy-op"
            :build-pathname "finishit"
            :entry-point "cl-welearn:main")
@@ -44,8 +43,7 @@
            :license "BSD 2-Clause"
            :homepage "https://github.com/notch1p/cl-welearn"
            :source-control "https://github.com/notch1p/cl-welearn.git"
-           :depends-on ("deploy"
-                        "bordeaux-threads"
+           :depends-on ("bordeaux-threads"
                         "str"
                         "dexador"
                         "cl-cookie"
@@ -72,22 +70,3 @@
            :build-operation "program-op"
            :build-pathname "bin/finishit"
            :entry-point "cl-welearn:main")
-
-; (defsystem "cl-welearn/tests"
-;            :author "Evan Gao"
-;            :license "LLGPL"
-;            :depends-on ("cl-welearn"
-;                         "rove")
-;            :components ((:module "tests"
-;                                  :components
-;                                  ((:file "main"))))
-;            :description "Test system for cl-welearn"
-;            :perform (test-op (op c) (symbol-call :rove :run c)))
-
-; sbcl core compression
-
-; #+sb-core-compression
-; (defmethod asdf:perform ((o asdf:image-op) (c asdf:system))
-;     (uiop:dump-image (asdf:output-file o c)
-;                      :executable t
-;                      :compression t))
