@@ -1,14 +1,7 @@
 (defpackage cl-welearn
     (:use :cl)
-    (:import-from :cl-welearn.auth
-                  #:cookies<-cred
-                  #:prompt-passwd)
     (:import-from :cl-welearn.learn
                   #:learn)
-    (:import-from :cl-welearn.pprint
-                  #:format-table)
-    (:import-from :uiop
-                  #:getenv)
     (:import-from :clingon
                   #:make-command
                   #:make-option

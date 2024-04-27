@@ -5,8 +5,7 @@
     (:import-from :str
                   #:containsp
                   #:split
-                  #:pad
-                  #:replace-first)
+                  #:pad)
     (:import-from :com.inuoe.jzon
                   #:parse)
     (:import-from :cl-welearn.pprint
