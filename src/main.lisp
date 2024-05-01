@@ -11,7 +11,7 @@
     (:export :main))
 (in-package :cl-welearn)
 
-(setq dex:*connection-pool* (dex:make-connection-pool 10))
+(setq dex:*connection-pool* (dex:make-connection-pool 50))
 
 (defun main ()
     (clingon:run (app/command)))
