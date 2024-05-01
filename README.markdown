@@ -11,7 +11,7 @@ Tested with SBCL in macOS and Linux, uses Bordeaux-Threads. It should work with 
 **UPDATE** I tested on Windows where WINHTTP is used. There's some problem with cookie parsing. For Windows use WSL instead. See fukamachi/dexador#172 for detail.
 
 Basic usage is similar to the original repo, but cookie login is deprecated.
-It now reads `WELEARN_ACCOUNT` and `WELEARN_PASSWORD`. Envs have a lower priority than cli args.
+It now reads `WELEARN_ACCOUNT` and `WELEARN_PASSWORD`. Envs (also reads from dotenv) have a lower priority than cli args.
 
 ## Building
 
