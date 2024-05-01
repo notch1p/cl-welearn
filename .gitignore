@@ -12,3 +12,4 @@ finishIt
 bin/
 .VSCodeCounter/
 .qlot/
+.env

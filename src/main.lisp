@@ -8,12 +8,14 @@
                   #:make-command
                   #:make-option
                   #:getopt)
+    (:import-from :dotenv #:load-env)
     (:export :main))
 (in-package :cl-welearn)
 
-(setq dex:*connection-pool* (dex:make-connection-pool 50))
 
 (defun main ()
+    (setq dex:*connection-pool* (dex:make-connection-pool 50))
+    (load-env ".env")
     (clingon:run (app/command)))
 
 (defun app/command ()

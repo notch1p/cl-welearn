@@ -8,6 +8,7 @@
            :source-control "https://github.com/notch1p/cl-welearn.git"
            :defsystem-depends-on (:deploy)
            :depends-on ("bordeaux-threads"
+                        "cl-dotenv"
                         "str"
                         "dexador"
                         "cl-cookie"
@@ -44,6 +45,7 @@
            :homepage "https://github.com/notch1p/cl-welearn"
            :source-control "https://github.com/notch1p/cl-welearn.git"
            :depends-on ("bordeaux-threads"
+                        "cl-dotenv"
                         "str"
                         "dexador"
                         "cl-cookie"
