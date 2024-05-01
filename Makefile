@@ -5,6 +5,7 @@ ASDF := $(PKG_NAME).asd
 CLFLAG := --noinform --non-interactive
 CLFLAG_DEPLOY := $(CLFLAG) --no-sysinit --no-userinit
 define COMMON_BODY
+--eval '(push :deploy-console *features*)' \
 --eval '(ql:quickload :cl+ssl)' \
 --eval '(ql:quickload :deploy)' \
 --eval '#+unix (deploy:define-library cl+ssl::libssl :dont-deploy T)' \
@@ -25,7 +26,6 @@ run:
 qlot-deploy:
 	$(LISP) $(CLFLAG_DEPLOY) \
 		--load '.qlot/setup.lisp' \
-		--eval '(push :deploy-console *features*)' \
 		$(COMMON_BODY_DEPLOY)
 
 build:

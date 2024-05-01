@@ -15,7 +15,7 @@
 
 (defun main ()
     (setq dex:*connection-pool* (dex:make-connection-pool 50))
-    (load-env ".env")
+    (when (probe-file ".env") (load-env ".env"))
     (clingon:run (app/command)))
 
 (defun app/command ()
