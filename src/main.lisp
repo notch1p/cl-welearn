@@ -21,7 +21,7 @@
 (defun app/command ()
     (make-command
         :name "finishit"
-        :description "it finishes homework for you so you don't waste any time on english."
+        :description "it finishes homework for you so you don't have to"
         :authors '("notch1p <evan@brmb.me>")
         :version "final"
         :license "BSD 2-Clause"
