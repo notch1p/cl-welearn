@@ -5,9 +5,12 @@
 
 # Cl-Welearn
 
+_Why bother doing English homework yourself when you have lisp on your back?_
+
 ## Usage
 
 Tested with SBCL in macOS and Linux, uses Bordeaux-Threads. It should work with most implementations. In Windows WINHTTP is used so it might be a bit different.
+
 **UPDATE** I tested on Windows where WINHTTP is used. There's some problem with cookie parsing. For Windows use WSL instead. See fukamachi/dexador#172 for detail.
 
 Basic usage is similar to the original repo, but cookie login is deprecated.
