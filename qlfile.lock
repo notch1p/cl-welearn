@@ -5,4 +5,8 @@
 ("hikettei-cl-tqdm" .
  (:class qlot/source/ultralisp:source-ultralisp
   :initargs (:%version :latest)
-  :version "ultralisp-20240418152500"))
+  :version "ultralisp-20240723211501"))
+("deploy" .
+ (:class qlot/source/ql:source-ql
+  :initargs (:%version :latest)
+  :version "ql-2023-10-21"))

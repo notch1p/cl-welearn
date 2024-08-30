@@ -81,7 +81,7 @@
     ,@body))
 
 (defun query-units ()
-  (with-hint-input #?'Choose a book by its index (or enter a negative num to exit)${(green *dollar*)} '
+  (with-hint-input #?"Choose a book by its index (or enter a negative num to exit)${(green *dollar*)} "
                    t
                    (let* ((idx (1- (read)))
                           (cid (progn
@@ -133,12 +133,12 @@
                         idx)
       (query-units)
     (print-query-results tabular)
-    (with-hint-input #?'Choose a unit by its index (or enter a negative num to return to upper level)${(green *dollar*)} '
+    (with-hint-input #?"Choose a unit by its index (or enter a negative num to return to upper level)${(green *dollar*)} "
                       t
                      (setq idx (1- (read)))
                      (when (> 0 idx) (return-from choose-unit))
                      (with-hint-input
-                      #?{Either set a fixed Correct% or a closed interval.~%Syntax: '(70 100)' for [70,100)% and '93' for 93%.~%${(green *dollar*)} }
+                      #?"Either set a fixed Correct% or a closed interval.~%Syntax: '(70 100)' for [70,100)% and '93' for 93%.~%${(green *dollar*)} "
                       t
                       (let* ((correctness (read))
                              (rand? (cond ((typep correctness 'cons) t)
@@ -265,7 +265,7 @@
               :query `(("action" . "courseunits") ("cid" . ,cid) ("uid" . ,uid)))
       :cookie-jar *global-cookies*
       :headers '(("Referer" . "https://welearn.sflep.com/student/course_info.aspx")))
-    (with-hint-input #?{Either set a fixed duration or a closed interval.~%Syntax: '(70 100)' for [70,100)s and '93' for 93s.~%${(green *dollar*)} }
+    (with-hint-input #?"Either set a fixed duration or a closed interval.~%Syntax: '(70 100)' for [70,100)s and '93' for 93s.~%${(green *dollar*)} "
                      
                      t
                      (let* ((running-threads
